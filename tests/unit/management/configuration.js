@@ -15,6 +15,7 @@ const arn = 'arn:aws:iam::123456789012:root';
 const { config } = require('../../../lib/Config');
 
 const {
+    remoteOverlayIsNewer,
     patchConfiguration,
 } = require('../../../lib/management/configuration');
 
@@ -58,7 +59,7 @@ function checkNoError(err) {
         `but got error ${err}`);
 }
 
-describe.only('patchConfiguration', () => {
+describe('patchConfiguration', () => {
     before(done => initManagementDatabase(log, err => {
         if (err) {
             return done(err);
@@ -256,5 +257,44 @@ describe.only('patchConfiguration', () => {
                 return done();
             });
         });
+    });
+});
+
+describe.only('remoteOverlayIsNewer', () => {
+    it('should return remoteOverlayIsNewer equals false if remote overlay ' +
+    'is less than the cached', () => {
+        const cachedOverlay = {
+            version: 2,
+        };
+        const remoteOverlay = {
+            version: 1,
+        };
+        const isRemoteOverlayNewer = remoteOverlayIsNewer(cachedOverlay,
+            remoteOverlay);
+        assert.equal(isRemoteOverlayNewer, false);
+    });
+    it('should return remoteOverlayIsNewer equals false if remote overlay ' +
+    'and the cached one are equal', () => {
+        const cachedOverlay = {
+            version: 1,
+        };
+        const remoteOverlay = {
+            version: 1,
+        };
+        const isRemoteOverlayNewer = remoteOverlayIsNewer(cachedOverlay,
+            remoteOverlay);
+        assert.equal(isRemoteOverlayNewer, false);
+    });
+    it('should return remoteOverlayIsNewer equals true if remote overlay ' +
+    'version is greater than the cached one ', () => {
+        const cachedOverlay = {
+            version: 0,
+        };
+        const remoteOverlay = {
+            version: 1,
+        };
+        const isRemoteOverlayNewer = remoteOverlayIsNewer(cachedOverlay,
+            remoteOverlay);
+        assert.equal(isRemoteOverlayNewer, true);
     });
 });
