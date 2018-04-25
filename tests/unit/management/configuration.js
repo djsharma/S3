@@ -260,7 +260,7 @@ describe('patchConfiguration', () => {
     });
 });
 
-describe.only('remoteOverlayIsNewer', () => {
+describe('remoteOverlayIsNewer', () => {
     it('should return remoteOverlayIsNewer equals false if remote overlay ' +
     'is less than the cached', () => {
         const cachedOverlay = {
