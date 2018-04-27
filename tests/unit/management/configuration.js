@@ -66,7 +66,7 @@ describe('patchConfiguration', () => {
         }
         return initManagementCredentialsMock(done);
     }));
-    afterEach(() => {
+    beforeEach(() => {
         resetConfig();
     });
     it('should modify config using the new config', done => {
